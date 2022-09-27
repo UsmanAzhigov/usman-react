@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Login } from './pages/Login';
 import { Profile } from './components/Profile';
+import { NotFound } from './pages/NotFound';
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="*" element={<h3>404 not found</h3>}></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Route>
       </Routes>
     </>
