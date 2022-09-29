@@ -1,98 +1,90 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-export default function App() {
-  const [fields, setFields] = React.useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  });
+import './styles.css';
 
-  const handleClickClear = () => {
-    setFields({
+function App() {
+  const { handleSubmit, register, formState, reset } = useForm({
+    defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
       password: '',
-    });
-  };
+    },
+  });
 
-  const handleClickRegistred = () => {
-    if (!fields.email.includes('@')) {
-      alert('Почта неверная!');
-      return;
-    }
-    if (fields.firstName.lenght < 3 || fields.lastName.length < 3) {
-      alert('Имя или фамилия указаны неверно!');
-      return;
-    }
-    if (fields.passwords.lenght < 6) {
-      alert('Пароль должен содержать 6 символов или больше!');
-      return;
-    }
-    console.log('ЗАРЕГИСТРИРОВАЛИСЬ', fields);
-    handleClickClear();
-  };
+  const onSubmit = (values) => console.log('ФОРМА!', values);
 
-  const handleChangInput = (event) => {
-    const { name, value } = event.target.name;
-    setFields({
-      ...fields,
-      [name]: value,
-    });
-  };
-  const isValid = fields.firstName && fields.lastName && fields.email && fields.password;
-  console.log(isValid);
+  console.log(formState.errors);
+
   return (
     <div className="App">
-      <div>
+      <div className="row">
         <TextField
           name="firstName"
-          onChange={handleChangInput}
-          id="standard-basic"
           label="Имя"
-          variant="standard"
-          value={fields.firstName}
+          {...register('firstName', {
+            validate: (value) => value !== 'admin' || 'Nice try!',
+          })}
+          helperText={formState.errors.firstName && formState.errors.firstName.message}
+          error={!!formState.errors.firstName}
+          fullWidth
         />
         <TextField
           name="lastName"
-          onChange={handleChangInput}
-          id="standard-basic"
           label="Фамилия"
-          variant="standard"
-          value={fields.lastName}
+          {...register('lastName', {
+            required: 'Это обязательное поле!',
+          })}
+          helperText={formState.errors.lastName && formState.errors.lastName.message}
+          error={!!formState.errors.lastName}
+          fullWidth
         />
       </div>
-      <div>
+      <div className="row">
         <TextField
+          {...register('email', {
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9._%+-]+\.[A-Z]{2,}$/i,
+              message: 'Это неверная почта!',
+            },
+          })}
+          helperText={formState.errors.email && formState.errors.email.message}
+          error={!!formState.errors.email}
           name="email"
-          onChange={handleChangInput}
-          id="standard-basic"
-          label="Email"
-          variant="standard"
-          value={fields.email}
+          label="email"
+          fullWidth
         />
         <TextField
+          {...register('password', {
+            required: 'Это обязательное поле!',
+          })}
+          helperText={formState.errors.password && formState.errors.password.message}
+          error={!!formState.errors.password}
           name="password"
-          onChange={handleChangInput}
-          id="standard-basic"
-          label="Password"
-          variant="standard"
-          value={fields.password}
+          type="password"
+          label="password"
+          fullWidth
         />
       </div>
+
       <br />
-      <Button
-        disabled={!isValid}
-        onClick={handleClickRegistred}
-        className="btn"
-        variant="contained">
-        Зарегистрироваться
-      </Button>
-      <Button onClick={handleClickClear} variant="outlined" color="error">
-        Очистить
-      </Button>
+      <div className="row">
+        <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
+          Зарегистрироваться
+        </Button>
+        <Button
+          onClick={() => {
+            reset();
+          }}
+          variant="contained"
+          color="secondary">
+          Очистить
+        </Button>
+      </div>
     </div>
   );
 }
+
+export default App;
