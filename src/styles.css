@@ -7,11 +7,24 @@ body {
   padding: 40px;
 }
 
-.row {
-  display: flex;
-}
-
 .MuiTextField-root,
 .MuiButton-root {
-  margin: 0 15px !important;
+  margin: 5px 15px !important;
+}
+.navigaciya {
+  margin-bottom: 5px;
+  margin-left: 15px;
+}
+.row button {
+  max-width: 200px;
+}
+.App button {
+  margin-left: 10px;
+  display: flex;
+  border-radius: 5px;
+  border: 0px;
+}
+.navigaciya {
+  background-color: blueviolet;
+  color: aliceblue;
 }

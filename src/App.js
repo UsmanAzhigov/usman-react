@@ -1,88 +1,37 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import AddressForm from './forms/AddressForm';
+import PersonalInForms from './forms/PersonalInForms';
+import Result from './forms/Result';
 import './styles.css';
 
 function App() {
-  const { handleSubmit, register, formState, reset } = useForm({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-    },
-  });
-
-  const onSubmit = (values) => console.log('ФОРМА!', values);
-
-  console.log(formState.errors);
-
+  const [formValues, setFormValues] = React.useState({});
+  const navigate = useNavigate();
+  const nexStep = () => {
+    navigate('address', 'result');
+  };
+  const back = () => {
+    navigate('/');
+  };
+  console.log('Общая информация', formValues);
   return (
     <div className="App">
-      <div className="row">
-        <TextField
-          name="firstName"
-          label="Имя"
-          {...register('firstName', {
-            validate: (value) => value !== 'admin' || 'Nice try!',
-          })}
-          helperText={formState.errors.firstName && formState.errors.firstName.message}
-          error={!!formState.errors.firstName}
-          fullWidth
+      <button className="navigaciya" onClick={nexStep}>
+        Адрес отправки
+      </button>
+      <button className="back" onClick={back}>
+        Назад
+      </button>
+      <Routes>
+        <Route
+          path="/"
+          element={<PersonalInForms navigate={nexStep} setFormValues={setFormValues} />}
+          exact
         />
-        <TextField
-          name="lastName"
-          label="Фамилия"
-          {...register('lastName', {
-            required: 'Это обязательное поле!',
-          })}
-          helperText={formState.errors.lastName && formState.errors.lastName.message}
-          error={!!formState.errors.lastName}
-          fullWidth
-        />
-      </div>
-      <div className="row">
-        <TextField
-          {...register('email', {
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9._%+-]+\.[A-Z]{2,}$/i,
-              message: 'Это неверная почта!',
-            },
-          })}
-          helperText={formState.errors.email && formState.errors.email.message}
-          error={!!formState.errors.email}
-          name="email"
-          label="email"
-          fullWidth
-        />
-        <TextField
-          {...register('password', {
-            required: 'Это обязательное поле!',
-          })}
-          helperText={formState.errors.password && formState.errors.password.message}
-          error={!!formState.errors.password}
-          name="password"
-          type="password"
-          label="password"
-          fullWidth
-        />
-      </div>
-
-      <br />
-      <div className="row">
-        <Button onClick={handleSubmit(onSubmit)} variant="contained" color="primary">
-          Зарегистрироваться
-        </Button>
-        <Button
-          onClick={() => {
-            reset();
-          }}
-          variant="contained"
-          color="secondary">
-          Очистить
-        </Button>
-      </div>
+        <Route path="/address" element={<AddressForm setFormValues={setFormValues} />} />
+        <Route path="/result" element={<Result formValues={formValues} />} />
+      </Routes>
     </div>
   );
 }
