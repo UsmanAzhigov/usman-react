@@ -1,4 +1,4 @@
-const AddTask = ({ name, onRemove, index, onChange, activeAll, addTask }) => {
+const AddTask = ({ name, onRemove, index, onChange, activeAll }) => {
   return (
     <div style={{ marginLeft: '25px' }}>
       <input
