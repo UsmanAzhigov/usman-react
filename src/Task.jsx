@@ -3,13 +3,11 @@ import AddTask from './AddTask';
 
 const Task = () => {
   const [inputValue, setInputValue] = React.useState([]);
-  const [addTask, setAddTask] = React.useState([]);
+  const [tasks, setTasks] = React.useState([]);
   const [active, setActive] = React.useState(false);
-  const [activeAll, setActiveAll] = React.useState(false);
 
   const Add = () => {
-    setAddTask([...addTask, { name: inputValue }]);
-
+    setTasks([...tasks, { name: inputValue, checked: false }]);
     setInputValue('');
     setActive('');
   };
@@ -17,18 +15,33 @@ const Task = () => {
     setActive(!active);
   };
   const ClickActiveAll = () => {
-    setActiveAll(!activeAll);
+    setTasks(tasks.map((task) => ({ ...task, checked: true })));
+  };
+
+  const toggleTaskChecked = (index) => {
+    setTasks(
+      tasks.map((task, i) => {
+        if (i === index) {
+          return {
+            ...task,
+            checked: !task.checked,
+          };
+        }
+
+        return task;
+      }),
+    );
   };
 
   const onRemove = (index) => {
     if (window.confirm('Вы действительно хотите удалить?') === true) {
       console.log(index);
-      setAddTask(addTask.filter((_, i) => i !== index));
+      setTasks(tasks.filter((_, i) => i !== index));
     }
   };
   const Clear = () => {
     if (window.confirm('Вы действительно хотите удалить?') === true) {
-      setAddTask([]);
+      setTasks([]);
     }
   };
 
@@ -72,17 +85,10 @@ const Task = () => {
           ''
         )}
 
-        {addTask.map((obj, index) => (
+        {tasks.map((task, index) => (
           <div key={index} className="addTask">
             <li style={{ listStyleType: 'none' }}>
-              <AddTask
-                addTask={addTask}
-                activeAll={activeAll}
-                onChange={ClickActiveAll}
-                onRemove={onRemove}
-                index={index}
-                name={obj.name}
-              />
+              <AddTask task={task} onChange={toggleTaskChecked} onRemove={onRemove} index={index} />
             </li>
           </div>
         ))}
